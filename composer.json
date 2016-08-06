@@ -1,0 +1,17 @@
+{
+    "name": "fastd/session",
+    "authors": [
+        {
+            "name": "janhuang",
+            "email": "bboyjanhuang@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "FastD\\": "src"
+        }
+    }
+}
