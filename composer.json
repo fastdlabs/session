@@ -11,7 +11,7 @@
     },
     "autoload": {
         "psr-4": {
-            "FastD\\": "src"
+            "FastD\\Session\\": "src"
         }
     }
 }
