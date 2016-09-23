@@ -16,7 +16,7 @@ namespace FastD\Swoole\Http;
  */
 class Session
 {
-    const TOKEN = 'sws';
+    const TOKEN = 'X-Session-Id';
 
     /**
      * @var string
