@@ -12,7 +12,7 @@
  * WebSite: http://www.janhuang.me
  */
 
-namespace FastD\Http\Session;
+namespace FastD\Session;
 
 use FastD\Http\Session\Storage\SessionStorageInterface;
 
@@ -21,7 +21,7 @@ use FastD\Http\Session\Storage\SessionStorageInterface;
  *
  * @package FastD\Http\Session
  */
-class SessionHandler extends \SessionHandler
+abstract class SessionHandler extends \SessionHandler
 {
     /**
      * @var SessionStorageInterface

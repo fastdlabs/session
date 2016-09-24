@@ -7,7 +7,7 @@
  * @link      http://www.fast-d.cn/
  */
 
-namespace FastD\Swoole\Http;
+namespace FastD\Session;
 
 /**
  * Class Session
