@@ -7,8 +7,9 @@
  * @link      http://www.fast-d.cn/
  */
 
-use FastD\Session\Session;
+namespace FastD\Session\Handles;
 
-include __DIR__ . '/../vendor/autoload.php';
+class CookieHandler
+{
 
-$session = new Session();
+}
