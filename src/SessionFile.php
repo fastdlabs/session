@@ -12,9 +12,7 @@
  * WebSite: http://www.janhuang.me
  */
 
-namespace FastD\Http\Session\Storage;
-
-use FastD\Session\SessionHandler;
+namespace FastD\Session;
 
 /**
  * Class SessionRedis

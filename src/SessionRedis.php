@@ -12,16 +12,14 @@
  * WebSite: http://www.janhuang.me
  */
 
-namespace FastD\Http\Session\Storage;
-
-use FastD\Storage\CacheInterface;
+namespace FastD\Session;
 
 /**
  * Class SessionRedis
  *
  * @package FastD\Http\Session\Storage
  */
-class SessionRedis implements SessionStorageInterface
+class SessionRedis extends SessionHandler
 {
     /**
      * @var CacheInterface

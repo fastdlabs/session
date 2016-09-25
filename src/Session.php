@@ -8,7 +8,6 @@
  */
 
 namespace FastD\Session;
-use FastD\Http\Session\Storage\SessionFile;
 
 /**
  * Class Session
