@@ -9,6 +9,8 @@
 
 namespace FastD\Session;
 
+use FastD\Http\ServerRequest;
+
 /**
  * Class Session
  *
@@ -38,14 +40,14 @@ class Session
      */
     protected $started = false;
 
-    /**
-     * Session constructor.
-     * @param HttpRequest $request
-     * @param string $path
-     */
-    public function __construct(HttpRequest $request, $path = '/tmp')
+    public function __construct($path = '/tmp')
     {
-        $this->sessionStart($request, $path);
+
+    }
+
+    public static function start()
+    {
+
     }
 
     /**
@@ -80,16 +82,12 @@ class Session
     /**
      * @return string
      */
-    protected function buildSessionId()
-    {
-        return md5(microtime(true) . mt_rand(000000, 999999));
-    }
-
-    /**
-     * @return string
-     */
     public function getSessionId()
     {
+        if (null === $this->sessionId) {
+            $this->sessionId = (string) new SessionId();
+        }
+
         return $this->sessionId;
     }
 
@@ -99,7 +97,7 @@ class Session
      */
     public function get($name)
     {
-        return $this->session[$name] ?? false;
+        return isset($this->session[$name]) ? $this->session[$name] : false;
     }
 
     /**
