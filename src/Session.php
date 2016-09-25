@@ -32,8 +32,12 @@ class Session
      */
     protected $started = false;
 
-    public function __construct($sessionId = null, $sessionHandler = SessionFile::class)
+    public function __construct($sessionId = null, $sessionHandler = null)
     {
+        if (null === $sessionHandler) {
+            $sessionHandler = new SessionFile('/tmp');
+        }
+
         $this->sessionHandler = $sessionHandler;
 
         if (!$this->started) {
@@ -42,7 +46,7 @@ class Session
         }
     }
 
-    public static function start($sessionId = null, $sessionHandler = SessionFile::class)
+    public static function start($sessionId = null, $sessionHandler = null)
     {
         return new static($sessionId, $sessionHandler);
     }
