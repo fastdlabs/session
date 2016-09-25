@@ -14,83 +14,14 @@
 
 namespace FastD\Http\Session\Storage;
 
-use FastD\Storage\CacheInterface;
+use FastD\Session\SessionHandler;
 
 /**
  * Class SessionRedis
  *
  * @package FastD\Http\Session\Storage
  */
-class SessionFile implements SessionStorageInterface
+class SessionFile extends SessionHandler
 {
-    /**
-     * @var CacheInterface
-     */
-    protected $storage;
 
-    /**
-     * SessionRedis constructor.
-     * @param CacheInterface $cacheInterface
-     */
-    public function __construct(CacheInterface $cacheInterface)
-    {
-        $this->storage = $cacheInterface;
-    }
-
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function isExpire($name)
-    {
-        return $this->storage->ttl(self::KEY_PREFIX . $name);
-    }
-
-    /**
-     * @param $name
-     * @param $ttl
-     * @return mixed
-     */
-    public function ttl($name, $ttl)
-    {
-        return $this->storage->expire(self::KEY_PREFIX . $name, $ttl);
-    }
-
-    /**
-     * @param $name
-     * @return mixed
-     */
-    public function get($name)
-    {
-        return $this->storage->get(self::KEY_PREFIX . $name);
-    }
-
-    /**
-     * @param $name
-     * @param $value
-     * @param $ttl
-     * @return bool
-     */
-    public function set($name, $value, $ttl = null)
-    {
-        return $this->storage->set(self::KEY_PREFIX . $name, $value, $ttl ?? 3600);
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function has($name)
-    {
-        return $this->storage->expire(self::KEY_PREFIX . $name, 1);
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function remove($name)
-    {
-        return $this->storage->del($name);
-    }
 }

@@ -24,19 +24,6 @@ use FastD\Http\Session\Storage\SessionStorageInterface;
 abstract class SessionHandler extends \SessionHandler
 {
     /**
-     * @var SessionStorageInterface
-     */
-    protected $storage;
-
-    /**
-     * @param SessionStorageInterface|null $sessionStorageInterface
-     */
-    public function __construct(SessionStorageInterface $sessionStorageInterface)
-    {
-        $this->storage = $sessionStorageInterface;
-    }
-
-    /**
      * @return bool
      */
     public function close()

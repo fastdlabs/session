@@ -8,8 +8,7 @@
  */
 
 namespace FastD\Session;
-
-use FastD\Http\ServerRequest;
+use FastD\Http\Session\Storage\SessionFile;
 
 /**
  * Class Session
@@ -18,65 +17,35 @@ use FastD\Http\ServerRequest;
  */
 class Session
 {
-    const TOKEN = 'X-Session-Id';
+    const SESSION_KEY = 'X-Session-Id';
 
     /**
      * @var string
      */
     protected $sessionId;
 
-    /**
-     * @var string
-     */
-    protected $sessionFile;
+    protected $sessionContent;
 
-    /**
-     * @var mixed
-     */
-    protected $session;
+    protected $sessionHandler;
 
     /**
      * @var bool
      */
     protected $started = false;
 
-    public function __construct($path = '/tmp')
+    public function __construct($sessionId = null, $sessionHandler = SessionFile::class)
     {
+        $this->sessionHandler = $sessionHandler;
 
-    }
-
-    public static function start()
-    {
-
-    }
-
-    /**
-     * @param HttpRequest $request
-     * @param $path
-     * @return bool
-     */
-    protected function sessionStart(HttpRequest $request, $path)
-    {
         if (!$this->started) {
-            if (isset($request->cookie[static::TOKEN])) {
-                $this->sessionId = $request->cookie[static::TOKEN];
-                $this->sessionFile = $path . DIRECTORY_SEPARATOR . $this->sessionId;
-                if (file_exists($this->sessionFile)) {
-                    $this->session = json_decode(file_get_contents($this->sessionFile), true);
-                } else {
-                    $this->sessionId = $this->buildSessionId();
-                    $this->sessionFile = $path . DIRECTORY_SEPARATOR . $this->sessionId;
-                    unset($request->cookie[static::TOKEN]);
-                }
-            } else {
-                $this->sessionId = $this->buildSessionId();
-                $this->sessionFile = $path . DIRECTORY_SEPARATOR . $this->sessionId;
-            }
-
+            $this->sessionId = $this->getSessionId();
             $this->started = true;
         }
+    }
 
-        return true;
+    public static function start($sessionId = null, $sessionHandler = SessionFile::class)
+    {
+        return new static($sessionId, $sessionHandler);
     }
 
     /**
@@ -97,7 +66,7 @@ class Session
      */
     public function get($name)
     {
-        return isset($this->session[$name]) ? $this->session[$name] : false;
+        return isset($this->sessionContent[$name]) ? $this->sessionContent[$name] : null;
     }
 
     /**
@@ -107,7 +76,7 @@ class Session
      */
     public function set($name, $value)
     {
-        $this->session[$name] = $value;
+        $this->sessionContent[$name] = $value;
 
         return $this;
     }
@@ -117,7 +86,7 @@ class Session
      */
     public function clear()
     {
-        $this->session = null;
+        $this->sessionContent = null;
 
         return $this;
     }
@@ -127,7 +96,7 @@ class Session
      */
     public function isHit()
     {
-        return '' != $this->session;
+        return '' != $this->sessionContent;
     }
 
     /**
@@ -135,7 +104,7 @@ class Session
      */
     public function toArray()
     {
-        return (array) $this->session;
+        return (array) $this->sessionContent;
     }
 
     /**
@@ -143,7 +112,7 @@ class Session
      */
     public function toJson()
     {
-        return json_encode($this->session);
+        return json_encode($this->sessionContent, JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -151,8 +120,6 @@ class Session
      */
     public function __destruct()
     {
-        if ($this->isHit()) {
-            file_put_contents($this->sessionFile, $this->toJson());
-        }
+
     }
 }

@@ -1,2 +1,2 @@
-# session
-FastD Session Handle.
+# Session
+

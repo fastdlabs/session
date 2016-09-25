@@ -1,4 +1,5 @@
 <?php
+use FastD\Session\Session;
 
 /**
  * @author    jan huang <bboyjanhuang@gmail.com>
@@ -11,6 +12,8 @@ class SessionTest extends PHPUnit_Framework_TestCase
 {
     public function testSession()
     {
+        $session = Session::start();
 
+        print_r($session);
     }
 }
