@@ -1,15 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: janhuang
- * Date: 16/5/11
- * Time: 下午4:51
- * Github: https://www.github.com/janhuang
- * Coding: https://www.coding.net/janhuang
- * SegmentFault: http://segmentfault.com/u/janhuang
- * Blog: http://segmentfault.com/blog/janhuang
- * Gmail: bboyjanhuang@gmail.com
- * WebSite: http://www.janhuang.me
+ * @author    jan huang <bboyjanhuang@gmail.com>
+ * @copyright 2016
+ *
+ * @link      https://www.github.com/janhuang
+ * @link      http://www.fast-d.cn/
  */
 
 namespace FastD\Session;
@@ -22,73 +17,108 @@ namespace FastD\Session;
 class SessionRedis extends SessionHandler
 {
     /**
-     * @var CacheInterface
+     * Close the session
+     *
+     * @link  http://php.net/manual/en/sessionhandlerinterface.close.php
+     * @return bool <p>
+     *        The return value (usually TRUE on success, FALSE on failure).
+     *        Note this value is returned internally to PHP for processing.
+     *        </p>
+     * @since 5.4.0
      */
-    protected $storage;
-
-    /**
-     * SessionRedis constructor.
-     * @param CacheInterface $cacheInterface
-     */
-    public function __construct(CacheInterface $cacheInterface)
+    public function close()
     {
-        $this->storage = $cacheInterface;
+        // TODO: Implement close() method.
     }
 
     /**
-     * @param string $name
-     * @return bool
+     * Destroy a session
+     *
+     * @link  http://php.net/manual/en/sessionhandlerinterface.destroy.php
+     * @param string $session_id The session ID being destroyed.
+     * @return bool <p>
+     *                           The return value (usually TRUE on success, FALSE on failure).
+     *                           Note this value is returned internally to PHP for processing.
+     *                           </p>
+     * @since 5.4.0
      */
-    public function isExpire($name)
+    public function destroy($session_id)
     {
-        return $this->storage->ttl(self::KEY_PREFIX . $name);
+        // TODO: Implement destroy() method.
     }
 
     /**
-     * @param $name
-     * @param $ttl
-     * @return mixed
+     * Cleanup old sessions
+     *
+     * @link  http://php.net/manual/en/sessionhandlerinterface.gc.php
+     * @param int $maxlifetime <p>
+     *                         Sessions that have not updated for
+     *                         the last maxlifetime seconds will be removed.
+     *                         </p>
+     * @return bool <p>
+     *                         The return value (usually TRUE on success, FALSE on failure).
+     *                         Note this value is returned internally to PHP for processing.
+     *                         </p>
+     * @since 5.4.0
      */
-    public function ttl($name, $ttl)
+    public function gc($maxlifetime)
     {
-        return $this->storage->expire(self::KEY_PREFIX . $name, $ttl);
+        // TODO: Implement gc() method.
     }
 
     /**
-     * @param $name
-     * @return mixed
+     * Initialize session
+     *
+     * @link  http://php.net/manual/en/sessionhandlerinterface.open.php
+     * @param string $save_path The path where to store/retrieve the session.
+     * @param string $name      The session name.
+     * @return bool <p>
+     *                          The return value (usually TRUE on success, FALSE on failure).
+     *                          Note this value is returned internally to PHP for processing.
+     *                          </p>
+     * @since 5.4.0
      */
-    public function get($name)
+    public function open($save_path, $name)
     {
-        return $this->storage->get(self::KEY_PREFIX . $name);
+        // TODO: Implement open() method.
     }
 
     /**
-     * @param $name
-     * @param $value
-     * @param $ttl
-     * @return bool
+     * Read session data
+     *
+     * @link  http://php.net/manual/en/sessionhandlerinterface.read.php
+     * @param string $session_id The session id to read data for.
+     * @return string <p>
+     *                           Returns an encoded string of the read data.
+     *                           If nothing was read, it must return an empty string.
+     *                           Note this value is returned internally to PHP for processing.
+     *                           </p>
+     * @since 5.4.0
      */
-    public function set($name, $value, $ttl = null)
+    public function read($session_id)
     {
-        return $this->storage->set(self::KEY_PREFIX . $name, $value, $ttl ?? 3600);
+        // TODO: Implement read() method.
     }
 
     /**
-     * @param $name
-     * @return bool
+     * Write session data
+     *
+     * @link  http://php.net/manual/en/sessionhandlerinterface.write.php
+     * @param string $session_id   The session id.
+     * @param string $session_data <p>
+     *                             The encoded session data. This data is the
+     *                             result of the PHP internally encoding
+     *                             the $_SESSION superglobal to a serialized
+     *                             string and passing it as this parameter.
+     *                             Please note sessions use an alternative serialization method.
+     *                             </p>
+     * @return bool <p>
+     *                             The return value (usually TRUE on success, FALSE on failure).
+     *                             Note this value is returned internally to PHP for processing.
+     *                             </p>
+     * @since 5.4.0
      */
-    public function has($name)
+    public function write($session_id, $session_data)
     {
-        return $this->storage->expire(self::KEY_PREFIX . $name, 1);
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function remove($name)
-    {
-        return $this->storage->del($name);
-    }
-}
+        // TODO: Implement write() method.
+}}
