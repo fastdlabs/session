@@ -14,9 +14,8 @@ namespace FastD\Session;
  *
  * @package FastD\Http\Session\Storage
  */
-class SessionFile extends SessionHandler
+class SessionRedisHandler extends SessionHandler
 {
-
     /**
      * Close the session
      *

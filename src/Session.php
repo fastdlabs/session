@@ -19,12 +19,15 @@ class Session
     const SESSION_KEY = 'X-Session-Id';
 
     /**
-     * @var string
+     * @var static
      */
-    protected $sessionId;
+    protected static $session;
 
     protected $sessionContent;
 
+    /**
+     * @var SessionHandler
+     */
     protected $sessionHandler;
 
     /**
@@ -32,23 +35,35 @@ class Session
      */
     protected $started = false;
 
-    public function __construct($sessionId = null, $sessionHandler = null)
+    /**
+     * Session constructor.
+     *
+     * @param null $sessionId
+     * @param SessionHandler|null $sessionHandler
+     */
+    public function __construct($sessionId = null, SessionHandler $sessionHandler = null)
     {
         if (null === $sessionHandler) {
-            $sessionHandler = new SessionFile('/tmp');
+            $sessionHandler = new SessionFileHandler('/tmp');
         }
 
         $this->sessionHandler = $sessionHandler;
 
-        if (!$this->started) {
-            $this->sessionId = $this->getSessionId();
-            $this->started = true;
-        }
+        $sessionHandler->setSessionId($sessionId);
     }
 
-    public static function start($sessionId = null, $sessionHandler = null)
+    /**
+     * @param null $sessionId
+     * @param SessionHandler|null $sessionHandler
+     * @return static
+     */
+    public static function start($sessionId = null, SessionHandler $sessionHandler = null)
     {
-        return new static($sessionId, $sessionHandler);
+        if (null === static::$session) {
+            static::$session = new static($sessionId, $sessionHandler);
+        }
+
+        return static::$session;
     }
 
     /**
@@ -56,11 +71,7 @@ class Session
      */
     public function getSessionId()
     {
-        if (null === $this->sessionId) {
-            $this->sessionId = (string) new SessionId();
-        }
-
-        return $this->sessionId;
+        return $this->sessionHandler->getSessionId();
     }
 
     /**
@@ -116,13 +127,5 @@ class Session
     public function toJson()
     {
         return json_encode($this->sessionContent, JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * @return void
-     */
-    public function __destruct()
-    {
-
     }
 }

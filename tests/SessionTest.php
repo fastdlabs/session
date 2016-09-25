@@ -1,4 +1,5 @@
 <?php
+
 use FastD\Session\Session;
 
 /**
@@ -14,6 +15,6 @@ class SessionTest extends PHPUnit_Framework_TestCase
     {
         $session = Session::start();
 
-        print_r($session);
+//        print_r($session);
     }
 }
