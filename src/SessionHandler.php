@@ -9,14 +9,12 @@
 
 namespace FastD\Session;
 
-use SessionHandlerInterface;
-
 /**
  * Class SessionHandler
  *
  * @package FastD\Http\Session
  */
-abstract class SessionHandler implements SessionHandlerInterface
+abstract class SessionHandler
 {
     protected $sessionId;
 
@@ -42,5 +40,20 @@ abstract class SessionHandler implements SessionHandlerInterface
     public function isHit()
     {
 
+    }
+
+    abstract public function open($savePath);
+
+    abstract public function close();
+
+    abstract public function destroy();
+
+    abstract public function set($key, $value);
+
+    abstract public function get($key = null);
+
+    public function __destruct()
+    {
+        $this->close();
     }
 }
