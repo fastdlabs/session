@@ -50,11 +50,12 @@ abstract class SessionHandler
     }
 
     /**
+     * @param string $prefix
      * @return string
      */
-    public function getSessionId()
+    public function getSessionId($prefix = '')
     {
-        return $this->sessionId;
+        return $prefix . $this->sessionId;
     }
 
     /**
