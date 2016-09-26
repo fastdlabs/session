@@ -22,6 +22,19 @@ abstract class SessionHandler
     protected $sessionId;
 
     /**
+     * SessionFileHandler constructor.
+     *
+     * @param null $sessionId
+     * @param string $savePath
+     */
+    public function __construct($sessionId = null, $savePath = '/tmp')
+    {
+        $this->setSessionId($sessionId);
+
+        $this->open($savePath);
+    }
+
+    /**
      * @param $sessionId
      * @return $this
      */

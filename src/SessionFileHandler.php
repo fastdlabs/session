@@ -27,19 +27,6 @@ class SessionFileHandler extends SessionHandler
     protected $file;
 
     /**
-     * SessionFileHandler constructor.
-     *
-     * @param null $sessionId
-     * @param string $savePath
-     */
-    public function __construct($sessionId = null, $savePath = '/tmp')
-    {
-        $this->setSessionId($sessionId);
-
-        $this->open($savePath);
-    }
-
-    /**
      * @param $savePath
      * @return bool
      */
@@ -110,6 +97,6 @@ class SessionFileHandler extends SessionHandler
             return $this->content;
         }
 
-        return isset($this->content[$key]) ? $this->content[$key] : null;
+        return isset($this->content[$key]) ? $this->content[$key] : false;
     }
 }
