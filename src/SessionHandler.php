@@ -12,12 +12,19 @@ namespace FastD\Session;
 /**
  * Class SessionHandler
  *
- * @package FastD\Http\Session
+ * @package FastD\Session
  */
 abstract class SessionHandler
 {
+    /**
+     * @var string
+     */
     protected $sessionId;
 
+    /**
+     * @param $sessionId
+     * @return $this
+     */
     public function setSessionId($sessionId)
     {
         if (null === $sessionId) {
@@ -29,27 +36,41 @@ abstract class SessionHandler
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getSessionId()
     {
         return $this->sessionId;
     }
 
     /**
-     * @return bool
+     * @param $savePath
+     * @return mixed
      */
-    public function isHit()
-    {
-
-    }
-
     abstract public function open($savePath);
 
+    /**
+     * @return mixed
+     */
     abstract public function close();
 
+    /**
+     * @return mixed
+     */
     abstract public function destroy();
 
-    abstract public function set($key, $value);
+    /**
+     * @param $key
+     * @param null $value
+     * @return mixed
+     */
+    abstract public function set($key, $value = null);
 
+    /**
+     * @param null $key
+     * @return mixed
+     */
     abstract public function get($key = null);
 
     public function __destruct()

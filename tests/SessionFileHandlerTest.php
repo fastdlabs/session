@@ -12,8 +12,13 @@ class SessionFileHandlerTest extends PHPUnit_Framework_TestCase
 {
     public function testSessionFile()
     {
-        $sessionHandler = new SessionFileHandler();
+        $sessionHandler = new SessionFileHandler('a2b76a055d5d2cbdc3b50bcabc23ea53');
 
-        print_r($sessionHandler);
+        $sessionHandler->set('name', 'jan');
+
+        $content = $sessionHandler->get();
+
+        $this->assertEquals(['name' => 'jan'], $content);
+        $this->assertEquals('jan', $sessionHandler->get('name'));
     }
 }

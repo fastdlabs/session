@@ -10,18 +10,28 @@
 namespace FastD\Session;
 
 /**
- * Class SessionRedis
+ * Class SessionFileHandler
  *
- * @package FastD\Http\Session\Storage
+ * @package FastD\Session
  */
 class SessionFileHandler extends SessionHandler
 {
-    protected $resource;
-
+    /**
+     * @var array
+     */
     protected $content = [];
 
+    /**
+     * @var string
+     */
     protected $file;
 
+    /**
+     * SessionFileHandler constructor.
+     *
+     * @param null $sessionId
+     * @param string $savePath
+     */
     public function __construct($sessionId = null, $savePath = '/tmp')
     {
         $this->setSessionId($sessionId);
@@ -29,6 +39,10 @@ class SessionFileHandler extends SessionHandler
         $this->open($savePath);
     }
 
+    /**
+     * @param $savePath
+     * @return bool
+     */
     public function open($savePath)
     {
         if (!file_exists($savePath)) {
@@ -41,8 +55,6 @@ class SessionFileHandler extends SessionHandler
             touch($this->file);
         }
 
-        $this->resource = fopen($this->file, 'rw+');
-
         $this->content = file_get_contents($this->file);
 
         if (!empty($this->content)) {
@@ -52,11 +64,17 @@ class SessionFileHandler extends SessionHandler
         return true;
     }
 
+    /**
+     * @return bool
+     */
     public function close()
     {
-        fclose($this->resource);
+        return true;
     }
 
+    /**
+     * @return mixed
+     */
     public function destroy()
     {
         if (file_exists($this->file)) {
@@ -64,13 +82,28 @@ class SessionFileHandler extends SessionHandler
         }
     }
 
-    public function set($key, $value)
+    /**
+     * @param $key
+     * @param null $value
+     * @return $this
+     */
+    public function set($key, $value = null)
     {
-        $this->content[$key] = $value;
+        if (null === $value) {
+            $this->content = $key;
+        } else {
+            $this->content[$key] = $value;
+        }
+
+        file_put_contents($this->file, json_encode($this->content, JSON_UNESCAPED_UNICODE));
 
         return $this;
     }
 
+    /**
+     * @param null $key
+     * @return array|mixed|null
+     */
     public function get($key = null)
     {
         if (null === $key) {
