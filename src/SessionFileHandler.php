@@ -99,4 +99,12 @@ class SessionFileHandler extends SessionHandler
 
         return isset($this->content[$key]) ? $this->content[$key] : false;
     }
+
+    /**
+     * @return mixed
+     */
+    public function clear()
+    {
+        $this->set([]);
+    }
 }

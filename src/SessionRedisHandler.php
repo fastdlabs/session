@@ -79,9 +79,13 @@ class SessionRedisHandler extends SessionHandler
      */
     public function set($key, $value = null)
     {
-        $this->redis->hmset($this->getSessionId(static::SESSION_PREFIX), [
-            $key => $value
-        ]);
+        if (is_array($key)) {
+            $this->redis->hmset($this->getSessionId(static::SESSION_PREFIX), []);
+        } else {
+            $this->redis->hmset($this->getSessionId(static::SESSION_PREFIX), [
+                $key => $value
+            ]);
+        }
     }
 
     /**
@@ -95,5 +99,15 @@ class SessionRedisHandler extends SessionHandler
         }
 
         return $this->hmget($this->getSessionId(static::SESSION_PREFIX), $key);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function clear()
+    {
+        $this->redis->del($this->getSessionId(static::SESSION_PREFIX));
+
+        $this->redis->set([]);
     }
 }

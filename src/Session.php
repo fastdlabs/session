@@ -23,8 +23,6 @@ class Session
      */
     protected static $session;
 
-    protected $sessionContent;
-
     /**
      * @var SessionHandler
      */
@@ -80,7 +78,7 @@ class Session
      */
     public function get($name)
     {
-        return isset($this->sessionContent[$name]) ? $this->sessionContent[$name] : null;
+        return $this->sessionHandler->get($name);
     }
 
     /**
@@ -90,7 +88,7 @@ class Session
      */
     public function set($name, $value)
     {
-        $this->sessionContent[$name] = $value;
+        $this->sessionHandler->set($name, $value);
 
         return $this;
     }
@@ -106,26 +104,10 @@ class Session
     }
 
     /**
-     * @return bool
-     */
-    public function isHit()
-    {
-        return '' != $this->sessionContent;
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        return (array) $this->sessionContent;
-    }
-
-    /**
      * @return string
      */
     public function toJson()
     {
-        return json_encode($this->sessionContent, JSON_UNESCAPED_UNICODE);
+        return json_encode($this->sessionHandler->get(null), JSON_UNESCAPED_UNICODE);
     }
 }

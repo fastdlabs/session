@@ -1,6 +1,5 @@
 <?php
 use FastD\Session\SessionFileHandler;
-use FastD\Session\SessionPhpHandler;
 
 /**
  * @author    jan huang <bboyjanhuang@gmail.com>

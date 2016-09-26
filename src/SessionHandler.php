@@ -87,6 +87,11 @@ abstract class SessionHandler
      */
     abstract public function get($key = null);
 
+    /**
+     * @return mixed
+     */
+    abstract public function clear();
+
     public function __destruct()
     {
         $this->close();

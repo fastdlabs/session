@@ -61,4 +61,12 @@ class SessionPhpHandler extends SessionHandler
 
         return isset($_SESSION[$key]) ? $_SESSION[$key] : false;
     }
+
+    /**
+     * @return mixed
+     */
+    public function clear()
+    {
+        $_SESSION = [];
+    }
 }
