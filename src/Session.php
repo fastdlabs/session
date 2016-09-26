@@ -42,7 +42,7 @@ class Session
     public function __construct($sessionId = null, SessionHandler $sessionHandler = null)
     {
         if (null === $sessionHandler) {
-            $sessionHandler = new SessionFileHandler('/tmp');
+            $sessionHandler = new SessionFileHandler($sessionId, '/tmp');
         }
 
         $this->sessionHandler = $sessionHandler;
@@ -65,6 +65,16 @@ class Session
     }
 
     /**
+     * @return array
+     */
+    public function getHeader()
+    {
+        return [
+            static::SESSION_KEY => $this->getSessionId()
+        ];
+    }
+
+    /**
      * @return string
      */
     public function getSessionId()
@@ -76,7 +86,7 @@ class Session
      * @param $name
      * @return bool
      */
-    public function get($name)
+    public function get($name = null)
     {
         return $this->sessionHandler->get($name);
     }
@@ -98,7 +108,7 @@ class Session
      */
     public function clear()
     {
-        $this->sessionContent = null;
+        $this->sessionHandler->clear();
 
         return $this;
     }
