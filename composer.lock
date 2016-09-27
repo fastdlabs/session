@@ -4,12 +4,12 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f0d44e15e5a0647ff34939396bacbd89",
-    "content-hash": "0ecf282e410d79ba6662d25551d5de28",
+    "hash": "583a1594cdded3826faff7aed01b7177",
+    "content-hash": "3ba57e93420d0fe5b97560c69f61b36d",
     "packages": [
         {
             "name": "fastd/storage",
-            "version": "dev-master",
+            "version": "2.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JanHuang/storage.git",

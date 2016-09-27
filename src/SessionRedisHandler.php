@@ -80,7 +80,7 @@ class SessionRedisHandler extends SessionHandler
     public function set($key, $value = null)
     {
         if (is_array($key)) {
-            $this->redis->hmset($this->getSessionId(static::SESSION_PREFIX), []);
+            $this->redis->hmset($this->getSessionId(static::SESSION_PREFIX), $key);
         } else {
             $this->redis->hmset($this->getSessionId(static::SESSION_PREFIX), [
                 $key => $value
@@ -95,10 +95,10 @@ class SessionRedisHandler extends SessionHandler
     public function get($key = null)
     {
         if (null === $key) {
-            return $this->hgetall($this->getSessionId(static::SESSION_PREFIX));
+            return $this->redis->hgetall($this->getSessionId(static::SESSION_PREFIX));
         }
 
-        return $this->hmget($this->getSessionId(static::SESSION_PREFIX), $key);
+        return $this->redis->hget($this->getSessionId(static::SESSION_PREFIX), $key);
     }
 
     /**
@@ -108,6 +108,6 @@ class SessionRedisHandler extends SessionHandler
     {
         $this->redis->del($this->getSessionId(static::SESSION_PREFIX));
 
-        $this->redis->set([]);
+        $this->set([]);
     }
 }

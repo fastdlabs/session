@@ -19,5 +19,15 @@ class SessionRedisHandlerTest extends PHPUnit_Framework_TestCase
         ]);
 
         $sessionHandler->set('name', 'jan');
+        $this->assertEquals('jan', $sessionHandler->get('name'));
+
+        $sessionHandler->set([
+            'age' => '18'
+        ]);
+
+        $this->assertEquals([
+            'name' => 'jan',
+            'age' => 18,
+        ], $sessionHandler->get());
     }
 }
