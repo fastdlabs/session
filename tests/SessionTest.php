@@ -11,15 +11,22 @@ use FastD\Session\Session;
  */
 class SessionTest extends PHPUnit_Framework_TestCase
 {
+    public function testSessionNullSessionId()
+    {
+        $session = new Session();
+
+        $this->assertNotNull($session->getSessionId());
+    }
+
     public function testSession()
     {
         $session = Session::start('eabaadb7946de746c0cc738a7d7be6a0');
 
-        $this->assertEquals($session->getHeader(), [
+        $this->assertEquals('eabaadb7946de746c0cc738a7d7be6a0', $session->getSessionId());
+
+        $this->assertEquals($session->getSessionHeader(), [
             'X-Session-Id' => 'eabaadb7946de746c0cc738a7d7be6a0'
         ]);
-
-        $this->assertEquals('eabaadb7946de746c0cc738a7d7be6a0', $session->getSessionId());
 
         $session->set('name', 'jan');
         $session->set('height', 180);

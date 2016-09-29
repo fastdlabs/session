@@ -12,11 +12,14 @@ namespace FastD\Session;
 /**
  * Class Session
  *
- * @package FastD\Swoole\Http
+ * @package FastD\Session
  */
 class Session
 {
-    const SESSION_KEY = 'X-Session-Id';
+    /**
+     * @var string
+     */
+    protected $sessionKey = 'X-Session-Id';
 
     /**
      * @var static
@@ -47,7 +50,7 @@ class Session
 
         $this->sessionHandler = $sessionHandler;
 
-        $sessionHandler->setSessionId($sessionId);
+        $this->withSessionId($sessionId);
     }
 
     /**
@@ -65,13 +68,43 @@ class Session
     }
 
     /**
+     * @param $key
+     * @return $this
+     */
+    public function withSessionKey($key)
+    {
+        $this->sessionKey = $key;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSessionKey()
+    {
+        return $this->sessionKey;
+    }
+
+    /**
      * @return array
      */
-    public function getHeader()
+    public function getSessionHeader()
     {
         return [
-            static::SESSION_KEY => $this->getSessionId()
+            $this->sessionKey => $this->getSessionId()
         ];
+    }
+
+    /**
+     * @param $sessionId
+     * @return $this
+     */
+    public function withSessionId($sessionId)
+    {
+        $this->sessionHandler->setSessionId($sessionId);
+
+        return $this;
     }
 
     /**
