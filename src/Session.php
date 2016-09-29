@@ -19,7 +19,7 @@ class Session
     /**
      * @var string
      */
-    protected $sessionKey = 'X-Session-Id';
+    const SESSION_KEY = 'X-Session-Id';
 
     /**
      * @var static
@@ -68,22 +68,11 @@ class Session
     }
 
     /**
-     * @param $key
-     * @return $this
-     */
-    public function withSessionKey($key)
-    {
-        $this->sessionKey = $key;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getSessionKey()
     {
-        return $this->sessionKey;
+        return static::SESSION_KEY;
     }
 
     /**
@@ -92,7 +81,7 @@ class Session
     public function getSessionHeader()
     {
         return [
-            $this->sessionKey => $this->getSessionId()
+            $this->getSessionKey() => $this->getSessionId()
         ];
     }
 
