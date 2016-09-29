@@ -23,6 +23,8 @@ class SessionPhpHandler extends SessionHandler
     public function open($savePath)
     {
         session_start();
+
+        return true;
     }
 
     /**
@@ -30,6 +32,7 @@ class SessionPhpHandler extends SessionHandler
      */
     public function close()
     {
+        return true;
     }
 
     /**
@@ -37,6 +40,7 @@ class SessionPhpHandler extends SessionHandler
      */
     public function destroy()
     {
+        return true;
     }
 
     /**
@@ -47,6 +51,8 @@ class SessionPhpHandler extends SessionHandler
     public function set($key, $value = null)
     {
         $_SESSION[$key] = $value;
+
+        return true;
     }
 
     /**
@@ -68,5 +74,7 @@ class SessionPhpHandler extends SessionHandler
     public function clear()
     {
         $_SESSION = [];
+
+        return true;
     }
 }

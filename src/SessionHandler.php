@@ -40,10 +40,6 @@ abstract class SessionHandler
      */
     public function setSessionId($sessionId)
     {
-        if (null === $sessionId) {
-            $sessionId = (string) new SessionId();
-        }
-
         $this->sessionId = $sessionId;
 
         return $this;
@@ -55,6 +51,10 @@ abstract class SessionHandler
      */
     public function getSessionId($prefix = '')
     {
+        if (null === $this->sessionId) {
+            $this->sessionId = (string) new SessionId();
+        }
+
         return $prefix . $this->sessionId;
     }
 
