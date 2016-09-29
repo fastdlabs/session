@@ -49,10 +49,22 @@ class SessionRedisHandler extends SessionHandler
      */
     public function open($savePath)
     {
-        $this->redis = Redis::connect($this->config);
+        $this->connect();
 
-        if (isset($this->config['dbindex'])) {
-            $this->redis->select($this->config['dbindex']);
+        return true;
+    }
+
+    /**
+     *
+     */
+    protected function connect()
+    {
+        if (null === $this->redis) {
+            $this->redis = Redis::connect($this->config);
+
+            if (isset($this->config['dbindex'])) {
+                $this->redis->select($this->config['dbindex']);
+            }
         }
     }
 

@@ -27,10 +27,29 @@ class SessionFileHandler extends SessionHandler
     protected $file;
 
     /**
+     * @var string
+     */
+    protected $savePath;
+
+    /**
      * @param $savePath
      * @return bool
      */
     public function open($savePath)
+    {
+        $this->savePath = $savePath;
+
+        if (!empty($this->sessionId)) {
+            $this->targetSessionFile($savePath);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $savePath
+     */
+    protected function targetSessionFile($savePath)
     {
         if (!file_exists($savePath)) {
             mkdir($savePath, 0755, true);
@@ -47,8 +66,6 @@ class SessionFileHandler extends SessionHandler
         if (!empty($this->content)) {
             $this->content = json_decode($this->content, true);
         }
-
-        return true;
     }
 
     /**
@@ -76,6 +93,10 @@ class SessionFileHandler extends SessionHandler
      */
     public function set($key, $value = null)
     {
+        if (empty($this->sessionId)) {
+            $this->targetSessionFile($this->savePath);
+        }
+
         if (null === $value) {
             $this->content = $key;
         } else {

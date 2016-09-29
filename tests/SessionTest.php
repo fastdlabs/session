@@ -15,7 +15,11 @@ class SessionTest extends PHPUnit_Framework_TestCase
     {
         $session = new Session();
 
+        $session->set('name', 'jan');
         $this->assertNotNull($session->getSessionId());
+        $sessionFile = '/tmp/' . $session->getSessionId() . '.session';
+        $this->assertTrue(file_exists($sessionFile));
+        $this->assertEquals('{"name":"jan"}', file_get_contents($sessionFile));
     }
 
     public function testSession()
