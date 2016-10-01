@@ -10,122 +10,90 @@
 namespace FastD\Session;
 
 /**
- * Class SessionFileHandler
+ * Class SessionHandler
  *
  * @package FastD\Session
  */
-class SessionFileHandler extends SessionHandler
+abstract class SessionHandler
 {
     /**
-     * @var array
-     */
-    protected $content = [];
-
-    /**
      * @var string
      */
-    protected $file;
+    protected $sessionId;
 
     /**
-     * @var string
+     * SessionFileHandler constructor.
+     *
+     * @param null $sessionId
+     * @param string $savePath
      */
-    protected $savePath;
-
-    /**
-     * @param $savePath
-     * @return bool
-     */
-    public function open($savePath)
+    public function __construct($sessionId = null, $savePath = '/tmp')
     {
-        $this->savePath = $savePath;
+        $this->setSessionId($sessionId);
 
-        if (!empty($this->sessionId)) {
-            $this->targetSessionFile($savePath);
-        }
-
-        return true;
+        $this->open($savePath);
     }
 
     /**
-     * @param $savePath
-     */
-    protected function targetSessionFile($savePath)
-    {
-        if (!file_exists($savePath)) {
-            mkdir($savePath, 0755, true);
-        }
-
-        $this->file = $savePath . DIRECTORY_SEPARATOR . $this->getSessionId() . '.session';
-
-        if (!file_exists($this->file)) {
-            touch($this->file);
-        }
-
-        $this->content = file_get_contents($this->file);
-
-        if (!empty($this->content)) {
-            $this->content = json_decode($this->content, true);
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    public function close()
-    {
-        return true;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function destroy()
-    {
-        if (file_exists($this->file)) {
-            unlink($this->file);
-        }
-    }
-
-    /**
-     * @param $key
-     * @param null $value
+     * @param $sessionId
      * @return $this
      */
-    public function set($key, $value = null)
+    public function setSessionId($sessionId)
     {
-        if (empty($this->sessionId) || empty($this->file)) {
-            $this->targetSessionFile($this->savePath);
-        }
-
-        if (null === $value) {
-            $this->content = $key;
-        } else {
-            $this->content[$key] = $value;
-        }
-
-        file_put_contents($this->file, json_encode($this->content, JSON_UNESCAPED_UNICODE));
+        $this->sessionId = $sessionId;
 
         return $this;
     }
 
     /**
-     * @param null $key
-     * @return array|mixed|null
+     * @param string $prefix
+     * @return string
      */
-    public function get($key = null)
+    public function getSessionId($prefix = '')
     {
-        if (null === $key) {
-            return $this->content;
+        if (null === $this->sessionId) {
+            $this->sessionId = (string) new SessionId();
         }
 
-        return isset($this->content[$key]) ? $this->content[$key] : false;
+        return $prefix . $this->sessionId;
     }
+
+    /**
+     * @param $savePath
+     * @return mixed
+     */
+    abstract public function open($savePath);
 
     /**
      * @return mixed
      */
-    public function clear()
+    abstract public function close();
+
+    /**
+     * @return mixed
+     */
+    abstract public function destroy();
+
+    /**
+     * @param $key
+     * @param null $value
+     * @return mixed
+     */
+    abstract public function set($key, $value = null);
+
+    /**
+     * @param null $key
+     * @return mixed
+     */
+    abstract public function get($key = null);
+
+    /**
+     * @return mixed
+     */
+    abstract public function clear();
+
+    public function __destruct()
     {
-        $this->set([]);
+        $this->close();
     }
 }

@@ -93,7 +93,7 @@ class SessionFileHandler extends SessionHandler
      */
     public function set($key, $value = null)
     {
-        if (empty($this->sessionId)) {
+        if (empty($this->sessionId) || empty($this->file)) {
             $this->targetSessionFile($this->savePath);
         }
 
