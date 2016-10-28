@@ -142,4 +142,12 @@ class Session
     {
         return json_encode($this->sessionHandler->get(null), JSON_UNESCAPED_UNICODE);
     }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->sessionHandler->get(null);
+    }
 }
