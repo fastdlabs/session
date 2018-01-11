@@ -9,17 +9,21 @@
 
 namespace FastD\Session;
 
+
+use FastD\Http\ServerRequest;
+use FastD\Utils\ArrayObject;
+
 /**
  * Class Session
  *
  * @package FastD\Session
  */
-class Session
+class Session extends ArrayObject
 {
     /**
      * @var string
      */
-    const SESSION_KEY = 'X-Session-Id';
+    const SESSION_KEY = 'Session-Id';
 
     /**
      * @var static
@@ -27,73 +31,45 @@ class Session
     protected static $session;
 
     /**
-     * @var SessionHandler
+     * @var SessionHandlerInterface
      */
     protected $sessionHandler;
 
     /**
-     * @var bool
+     * @var ServerRequest|\Psr\Http\Message\ServerRequestInterface
      */
-    protected $started = false;
+    protected $request;
 
     /**
      * Session constructor.
-     *
-     * @param null $sessionId
-     * @param SessionHandler|null $sessionHandler
+     * @param ServerRequest|null $serverRequest
+     * @param SessionHandlerInterface|null $sessionHandler
      */
-    public function __construct($sessionId = null, SessionHandler $sessionHandler = null)
+    public function __construct(ServerRequest $serverRequest = null, SessionHandlerInterface $sessionHandler = null)
     {
-        if (null === $sessionHandler) {
-            $sessionHandler = new SessionFileHandler($sessionId, '/tmp');
+        if (null === $serverRequest) {
+            $serverRequest = ServerRequest::createServerRequestFromGlobals();
         }
 
-        $this->sessionHandler = $sessionHandler;
+        if (null === $sessionHandler) {
+            $sessionHandler = new SessionPhpHandlerInterface();
+        }
 
-        $this->withSessionId($sessionId);
+        $this->request = $serverRequest;
+        $this->sessionHandler = $sessionHandler;
     }
 
     /**
-     * @param null $sessionId
-     * @param SessionHandler|null $sessionHandler
-     * @return static
+     * @param SessionHandlerInterface|null $sessionHandler
+     * @return Session
      */
-    public static function start($sessionId = null, SessionHandler $sessionHandler = null)
+    public static function start(SessionHandlerInterface $sessionHandler = null)
     {
         if (null === static::$session) {
-            static::$session = new static($sessionId, $sessionHandler);
+            static::$session = new static();
         }
 
         return static::$session;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSessionKey()
-    {
-        return static::SESSION_KEY;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSessionHeader()
-    {
-        return [
-            $this->getSessionKey() => $this->getSessionId()
-        ];
-    }
-
-    /**
-     * @param $sessionId
-     * @return $this
-     */
-    public function withSessionId($sessionId)
-    {
-        $this->sessionHandler->setSessionId($sessionId);
-
-        return $this;
     }
 
     /**
@@ -125,6 +101,11 @@ class Session
         return $this;
     }
 
+    public function isHit()
+    {
+
+    }
+
     /**
      * @return $this
      */
@@ -133,21 +114,5 @@ class Session
         $this->sessionHandler->clear();
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function toJson()
-    {
-        return json_encode($this->sessionHandler->get(null), JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        return $this->sessionHandler->get(null);
     }
 }

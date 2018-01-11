@@ -11,6 +11,9 @@ use FastD\Session\Session;
 
 include __DIR__ . '/../vendor/autoload.php';
 
-$session = new Session();
+$session = Session::start();
 
-$sessionId = new \FastD\Session\SessionId();
+$session->set('name', 'test');
+
+echo "<pre>";
+print_r($session);

@@ -16,7 +16,7 @@ use FastD\Storage\Driver\Redis\Redis;
  *
  * @package FastD\Session
  */
-class SessionRedisHandler extends SessionHandler
+class SessionRedisHandlerInterface extends SessionHandlerInterface
 {
     const SESSION_PREFIX = 'session:';
 

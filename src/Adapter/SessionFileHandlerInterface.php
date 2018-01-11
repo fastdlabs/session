@@ -14,7 +14,7 @@ namespace FastD\Session;
  *
  * @package FastD\Session
  */
-class SessionFileHandler extends SessionHandler
+class SessionFileHandlerInterface extends SessionHandlerInterface
 {
     /**
      * @var array
