@@ -7,15 +7,32 @@
  * @link      http://www.fast-d.cn/
  */
 
-namespace FastD\Session;
+namespace FastD\Session\Adapter;
+
+
+use FastD\Session\AbstractSessionHandler;
+use FastD\Utils\ArrayObject;
 
 /**
  * Class SessionPhpHandler
  *
  * @package FastD\Session
  */
-class SessionPhpHandlerInterface extends SessionHandlerInterface
+class PhpSessionHandler extends AbstractSessionHandler implements \SessionHandlerInterface
 {
+    /**
+     * @var ArrayObject
+     */
+    protected $sessionData;
+
+    /**
+     * PhpSessionHandler constructor.
+     */
+    public function __construct()
+    {
+        $this->sessionData = new ArrayObject();
+    }
+
     /**
      * Close the session
      * @link http://php.net/manual/en/sessionhandlerinterface.close.php
@@ -27,7 +44,7 @@ class SessionPhpHandlerInterface extends SessionHandlerInterface
      */
     public function close()
     {
-        // TODO: Implement close() method.
+        return true;
     }
 
     /**
@@ -42,7 +59,9 @@ class SessionPhpHandlerInterface extends SessionHandlerInterface
      */
     public function destroy($session_id)
     {
-        // TODO: Implement destroy() method.
+        $this->sessionData->offsetUnset($session_id);
+        
+        return true;
     }
 
     /**
@@ -60,7 +79,7 @@ class SessionPhpHandlerInterface extends SessionHandlerInterface
      */
     public function gc($maxlifetime)
     {
-        // TODO: Implement gc() method.
+        return true;
     }
 
     /**
@@ -76,7 +95,10 @@ class SessionPhpHandlerInterface extends SessionHandlerInterface
      */
     public function open($save_path, $name)
     {
-        // TODO: Implement open() method.
+        session_save_path($save_path);
+        session_name($name);
+
+        return true;
     }
 
     /**
@@ -92,7 +114,7 @@ class SessionPhpHandlerInterface extends SessionHandlerInterface
      */
     public function read($session_id)
     {
-        // TODO: Implement read() method.
+        return $this->sessionData->get($session_id);
     }
 
     /**
@@ -106,7 +128,7 @@ class SessionPhpHandlerInterface extends SessionHandlerInterface
      * string and passing it as this parameter.
      * Please note sessions use an alternative serialization method.
      * </p>
-     * @return bool <p>
+     * @return PhpSessionHandler <p>
      * The return value (usually TRUE on success, FALSE on failure).
      * Note this value is returned internally to PHP for processing.
      * </p>
@@ -114,6 +136,16 @@ class SessionPhpHandlerInterface extends SessionHandlerInterface
      */
     public function write($session_id, $session_data)
     {
-        // TODO: Implement write() method.
+        $this->sessionData->set($session_id, $session_data);
+
+        return $this;
+    }
+
+    /**
+     *
+     */
+    public function start()
+    {
+        session_set_save_handler($this, true);
     }
 }

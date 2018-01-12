@@ -1,4 +1,7 @@
 <?php
+
+use FastD\Session\Session;
+
 /**
  * @author    jan huang <bboyjanhuang@gmail.com>
  * @copyright 2018
@@ -9,5 +12,5 @@
 
 function session ()
 {
-
+    return Session::start();
 }

@@ -13,7 +13,13 @@ include __DIR__ . '/../vendor/autoload.php';
 
 $session = Session::start();
 
-$session->set('name', 'test');
+$session->set('foo', 'bar');
+$session->set('foo.bar', 'foobar');
 
 echo "<pre>";
+echo $session->get('foo');
+echo $session->get('foo.bar');
 print_r($session);
+
+
+

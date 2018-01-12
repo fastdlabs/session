@@ -15,6 +15,7 @@ namespace FastD\Session;
  *
  * @package FastD\Session
  */
-interface SessionHandlerInterface extends \SessionHandlerInterface
+abstract class AbstractSessionHandler
 {
+    abstract public function start();
 }

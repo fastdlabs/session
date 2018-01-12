@@ -9,16 +9,15 @@
 
 namespace FastD\Session;
 
-
+use FastD\Session\Adapter\PhpSessionHandler;
 use FastD\Http\ServerRequest;
-use FastD\Utils\ArrayObject;
 
 /**
  * Class Session
  *
  * @package FastD\Session
  */
-class Session extends ArrayObject
+class Session
 {
     /**
      * @var string
@@ -31,7 +30,7 @@ class Session extends ArrayObject
     protected static $session;
 
     /**
-     * @var SessionHandlerInterface
+     * @var AbstractSessionHandler
      */
     protected $sessionHandler;
 
@@ -41,32 +40,43 @@ class Session extends ArrayObject
     protected $request;
 
     /**
-     * Session constructor.
-     * @param ServerRequest|null $serverRequest
-     * @param SessionHandlerInterface|null $sessionHandler
+     * @var string
      */
-    public function __construct(ServerRequest $serverRequest = null, SessionHandlerInterface $sessionHandler = null)
+    protected $sessionId;
+
+    /**
+     * Session constructor.
+     * @param ServerRequest $serverRequest
+     * @param AbstractSessionHandler $sessionHandler
+     */
+    public function __construct(ServerRequest $serverRequest = null, AbstractSessionHandler $sessionHandler = null)
     {
         if (null === $serverRequest) {
             $serverRequest = ServerRequest::createServerRequestFromGlobals();
         }
 
         if (null === $sessionHandler) {
-            $sessionHandler = new SessionPhpHandlerInterface();
+            $sessionHandler = new PhpSessionHandler();
         }
 
+        $this->sessionId = version_compare(PHP_VERSION, '7.0.0') ? session_create_id() : md5(uniqid());
         $this->request = $serverRequest;
         $this->sessionHandler = $sessionHandler;
+        $this->sessionHandler->start();
+        $this->request->withCookieParams([
+            'session-id' => $this->sessionId,
+        ]);
     }
 
     /**
-     * @param SessionHandlerInterface|null $sessionHandler
+     * @param ServerRequest|null $serverRequest
+     * @param AbstractSessionHandler|null $sessionHandler
      * @return Session
      */
-    public static function start(SessionHandlerInterface $sessionHandler = null)
+    public static function start(ServerRequest $serverRequest = null, AbstractSessionHandler $sessionHandler = null)
     {
         if (null === static::$session) {
-            static::$session = new static();
+            static::$session = new static($serverRequest, $sessionHandler);
         }
 
         return static::$session;
@@ -77,41 +87,37 @@ class Session extends ArrayObject
      */
     public function getSessionId()
     {
-        return $this->sessionHandler->getSessionId();
+        return $this->sessionId;
     }
 
     /**
      * @param $name
-     * @return bool
+     * @return string
      */
-    public function get($name = null)
+    public function get($name)
     {
-        return $this->sessionHandler->get($name);
+        return $this->sessionHandler->read($name);
     }
 
     /**
-     * @param $name
+     * @param $key
      * @param $value
      * @return $this
      */
-    public function set($name, $value)
+    public function set($key, $value)
     {
-        $this->sessionHandler->set($name, $value);
+        $this->sessionHandler->write($key, $value);
 
         return $this;
     }
 
-    public function isHit()
-    {
-
-    }
-
     /**
+     * @param $key
      * @return $this
      */
-    public function clear()
+    public function delete($key)
     {
-        $this->sessionHandler->clear();
+        $this->sessionHandler->destroy($key);
 
         return $this;
     }
