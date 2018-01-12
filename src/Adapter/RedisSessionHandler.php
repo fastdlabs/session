@@ -16,7 +16,7 @@ use FastD\Storage\Driver\Redis\Redis;
  *
  * @package FastD\Session
  */
-class SessionRedisHandlerInterface extends SessionHandlerInterface
+class RedisSessionHandler extends AbstractSessionHandler
 {
     const SESSION_PREFIX = 'session:';
 
@@ -121,5 +121,10 @@ class SessionRedisHandlerInterface extends SessionHandlerInterface
         $this->redis->del($this->getSessionId(static::SESSION_PREFIX));
 
         $this->set([]);
+    }
+
+    public function start()
+    {
+        // TODO: Implement start() method.
     }
 }

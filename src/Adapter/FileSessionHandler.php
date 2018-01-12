@@ -14,7 +14,7 @@ namespace FastD\Session;
  *
  * @package FastD\Session
  */
-class SessionFileHandlerInterface extends SessionHandlerInterface
+class FileSessionHandler extends AbstractSessionHandler
 {
     /**
      * @var array
@@ -127,5 +127,10 @@ class SessionFileHandlerInterface extends SessionHandlerInterface
     public function clear()
     {
         $this->set([]);
+    }
+
+    public function start()
+    {
+        // TODO: Implement start() method.
     }
 }

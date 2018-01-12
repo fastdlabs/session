@@ -18,7 +18,7 @@ use FastD\Utils\ArrayObject;
  *
  * @package FastD\Session
  */
-class PhpSessionHandler extends AbstractSessionHandler implements \SessionHandlerInterface
+class NativeSessionHandler extends AbstractSessionHandler implements \SessionHandlerInterface
 {
     /**
      * @var ArrayObject
@@ -60,7 +60,7 @@ class PhpSessionHandler extends AbstractSessionHandler implements \SessionHandle
     public function destroy($session_id)
     {
         $this->sessionData->offsetUnset($session_id);
-        
+
         return true;
     }
 
@@ -128,7 +128,7 @@ class PhpSessionHandler extends AbstractSessionHandler implements \SessionHandle
      * string and passing it as this parameter.
      * Please note sessions use an alternative serialization method.
      * </p>
-     * @return PhpSessionHandler <p>
+     * @return NativeSessionHandler <p>
      * The return value (usually TRUE on success, FALSE on failure).
      * Note this value is returned internally to PHP for processing.
      * </p>

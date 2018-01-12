@@ -9,7 +9,7 @@
 
 namespace FastD\Session;
 
-use FastD\Session\Adapter\PhpSessionHandler;
+use FastD\Session\Adapter\NativeSessionHandler;
 use FastD\Http\ServerRequest;
 
 /**
@@ -56,7 +56,7 @@ class Session
         }
 
         if (null === $sessionHandler) {
-            $sessionHandler = new PhpSessionHandler();
+            $sessionHandler = new NativeSessionHandler();
         }
 
         $this->sessionId = version_compare(PHP_VERSION, '7.0.0') ? session_create_id() : md5(uniqid());
