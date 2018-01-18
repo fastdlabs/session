@@ -47,4 +47,13 @@ class EasySwooleSessionHandler extends NativeSessionHandler
     {
         return ES::delete($key);
     }
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function has($key)
+    {
+        return ES::has($key);
+    }
 }

@@ -65,4 +65,13 @@ class RedisSessionHandler extends AbstractSessionHandler
     {
         return $this->redis->del($key);
     }
+
+    /**
+     * @param $key
+     * @return bool|int
+     */
+    public function has($key)
+    {
+        return $this->redis->exists($key);
+    }
 }

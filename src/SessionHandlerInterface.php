@@ -46,4 +46,10 @@ interface SessionHandlerInterface
      * @return bool
      */
     public function delete($key);
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function has($key);
 }

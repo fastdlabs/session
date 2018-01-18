@@ -78,4 +78,14 @@ abstract class AbstractSessionHandler implements SessionHandlerInterface
     {
         return $this->driver->delete($key);
     }
+
+    /**
+     * @param $key
+     * @return bool
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function has($key)
+    {
+        return $this->driver->has($key);
+    }
 }

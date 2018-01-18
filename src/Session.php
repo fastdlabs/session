@@ -66,7 +66,7 @@ class Session
             $this->sessionId = version_compare(PHP_VERSION, '7.0.0') ? session_create_id() : md5(uniqid());
 
             $this->request->withCookieParams([
-                'session-id' => $this->sessionId,
+                static::SESSION_KEY => $this->sessionId,
             ]);
         }
 
@@ -97,23 +97,34 @@ class Session
 
     /**
      * @param $name
-     * @return string
+     * @param $default
+     * @return mixed
      */
-    public function get($name)
+    public function get($name, $default = null)
     {
-        return $this->sessionHandler->get($name);
+        return $this->sessionHandler->get($name, $default);
     }
 
     /**
      * @param $key
      * @param $value
+     * @param null $ttl
      * @return $this
      */
-    public function set($key, $value)
+    public function set($key, $value, $ttl = null)
     {
-        $this->sessionHandler->set($key, $value);
+        $this->sessionHandler->set($key, $value, $ttl);
 
         return $this;
+    }
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function has($key)
+    {
+        return $this->sessionHandler->has($key);
     }
 
     /**
