@@ -88,4 +88,12 @@ abstract class AbstractSessionHandler implements SessionHandlerInterface
     {
         return $this->driver->has($key);
     }
+
+    /**
+     * @return bool
+     */
+    public function clear()
+    {
+        return $this->driver->clear();
+    }
 }

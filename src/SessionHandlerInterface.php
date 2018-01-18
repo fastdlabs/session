@@ -52,4 +52,9 @@ interface SessionHandlerInterface
      * @return bool
      */
     public function has($key);
+
+    /**
+     * @return mixed
+     */
+    public function clear();
 }

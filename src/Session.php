@@ -137,4 +137,12 @@ class Session
 
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function clear()
+    {
+        return $this->sessionHandler->clear();
+    }
 }
