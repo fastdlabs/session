@@ -9,7 +9,7 @@
 
 namespace FastD\Session;
 
-use FastD\Storage\Driver\Redis\Redis;
+use Predis\Client;
 
 /**
  * Class SessionRedisHandler
@@ -18,113 +18,51 @@ use FastD\Storage\Driver\Redis\Redis;
  */
 class RedisSessionHandler extends AbstractSessionHandler
 {
-    const SESSION_PREFIX = 'session:';
-
     /**
-     * @var Redis
+     * @var \Redis|Client
      */
     protected $redis;
 
     /**
-     * @var array
+     * RedisSessionHandler constructor.
+     * @param $redis
      */
-    protected $config;
-
-    /**
-     * SessionRedisHandler constructor.
-     *
-     * @param array $config
-     * @param null $sessionId
-     */
-    public function __construct(array $config, $sessionId = null)
+    public function __construct($redis)
     {
-        $this->config = $config;
-
-        parent::__construct($sessionId, '/tmp');
-    }
-
-    /**
-     * @param $savePath
-     * @return mixed
-     */
-    public function open($savePath)
-    {
-        $this->connect();
-
-        return true;
-    }
-
-    /**
-     *
-     */
-    protected function connect()
-    {
-        if (null === $this->redis) {
-            $this->redis = Redis::connect($this->config);
-
-            if (isset($this->config['dbindex'])) {
-                $this->redis->select($this->config['dbindex']);
-            }
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function close()
-    {
-
-    }
-
-    /**
-     * @return mixed
-     */
-    public function destroy()
-    {
-        $this->close();
+        $this->redis = $redis;
     }
 
     /**
      * @param $key
-     * @param null $value
-     * @return mixed
+     * @param $value
+     * @param null $ttl
+     * @return $this|bool|mixed
      */
-    public function set($key, $value = null)
+    public function set($key, $value, $ttl = null)
     {
-        if (is_array($key)) {
-            $this->redis->hmset($this->getSessionId(static::SESSION_PREFIX), $key);
-        } else {
-            $this->redis->hmset($this->getSessionId(static::SESSION_PREFIX), [
-                $key => $value
-            ]);
-        }
+        return $this->redis->set($key, $value, $ttl);
     }
 
     /**
-     * @param null $key
-     * @return mixed
+     * @param $key
+     * @param null $default
+     * @return bool|mixed|null|string
      */
-    public function get($key = null)
+    public function get($key, $default = null)
     {
-        if (null === $key) {
-            return $this->redis->hgetall($this->getSessionId(static::SESSION_PREFIX));
+        if ($this->redis->exists($key)) {
+            return $this->redis->get($key);
         }
 
-        return $this->redis->hget($this->getSessionId(static::SESSION_PREFIX), $key);
+        return $default;
     }
 
     /**
-     * @return mixed
+     * @param $key
+     * @return bool|int
      */
-    public function clear()
+    public function delete($key)
     {
-        $this->redis->del($this->getSessionId(static::SESSION_PREFIX));
-
-        $this->set([]);
-    }
-
-    public function start()
-    {
-        // TODO: Implement start() method.
+        return $this->redis->del($key);
     }
 }

@@ -1,22 +1,15 @@
 # Session
 
-不基于 PHP 自身提供的 SessionHandler 对象实现的 Session 管理,缘由处于 Swoole 扩展本身不支持 Session, 因为 Session 本身并非 HTTP 的东西,仅仅是通过 Cookie 进行 SessionId 传输罢了。
+利用 Cookie 实现的 Session 管理，支持 `session_set_save_handler`, 支持 swoole，支持 easyswoole.
 
 ## Composer
 
 ```
-composer require "fastd/session:1.0.x-dev" -vvv
+composer require fastd/session -vvv
 ```
 
-## 使用
+### 联系
 
-```php
-$session = Session::start();
-$session->set('name', 'jan');
-```
+如果你在使用中遇到问题，请联系: [bboyjanhuang@gmail.com](mailto:bboyjanhuang@gmail.com). 微博: [编码侠](http://weibo.com/ecbboyjan)
 
-session 本身操作的是一个数组, 在 redis 中是一个 hash 数据类型。
-
-详细文档: [文档](docs/readme.md)
-
-## LICENSE MIT
+## License MIT

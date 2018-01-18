@@ -22,7 +22,7 @@ class Session
     /**
      * @var string
      */
-    const SESSION_KEY = 'Session-Id';
+    const SESSION_KEY = 'session-id';
 
     /**
      * @var static
@@ -47,9 +47,9 @@ class Session
     /**
      * Session constructor.
      * @param ServerRequest $serverRequest
-     * @param AbstractSessionHandler $sessionHandler
+     * @param SessionHandlerInterface $sessionHandler
      */
-    public function __construct(ServerRequest $serverRequest = null, AbstractSessionHandler $sessionHandler = null)
+    public function __construct(ServerRequest $serverRequest = null, SessionHandlerInterface $sessionHandler = null)
     {
         if (null === $serverRequest) {
             $serverRequest = ServerRequest::createServerRequestFromGlobals();
@@ -59,13 +59,18 @@ class Session
             $sessionHandler = new NativeSessionHandler();
         }
 
-        $this->sessionId = version_compare(PHP_VERSION, '7.0.0') ? session_create_id() : md5(uniqid());
         $this->request = $serverRequest;
         $this->sessionHandler = $sessionHandler;
-        $this->sessionHandler->start();
-        $this->request->withCookieParams([
-            'session-id' => $this->sessionId,
-        ]);
+
+        if (null === ($this->sessionId = $this->request->getCookie(static::SESSION_KEY, null))) {
+            $this->sessionId = version_compare(PHP_VERSION, '7.0.0') ? session_create_id() : md5(uniqid());
+
+            $this->request->withCookieParams([
+                'session-id' => $this->sessionId,
+            ]);
+        }
+
+        $this->sessionHandler->start($this->sessionId);
     }
 
     /**
@@ -96,7 +101,7 @@ class Session
      */
     public function get($name)
     {
-        return $this->sessionHandler->read($name);
+        return $this->sessionHandler->get($name);
     }
 
     /**
@@ -106,7 +111,7 @@ class Session
      */
     public function set($key, $value)
     {
-        $this->sessionHandler->write($key, $value);
+        $this->sessionHandler->set($key, $value);
 
         return $this;
     }
@@ -117,7 +122,7 @@ class Session
      */
     public function delete($key)
     {
-        $this->sessionHandler->destroy($key);
+        $this->sessionHandler->delete($key);
 
         return $this;
     }

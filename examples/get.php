@@ -7,19 +7,16 @@
  * @link      http://www.fast-d.cn/
  */
 
-use FastD\Session\Session;
-
 include __DIR__ . '/../vendor/autoload.php';
 
-$session = Session::start();
+$session = session();
 
-$session->set('foo', 'bar');
-$session->set('foo.bar', 'foobar');
+$response = new \FastD\Http\Response();
 
-echo "<pre>";
-echo $session->get('foo');
-echo $session->get('foo.bar');
-print_r($session);
+$response
+    ->withContent($session->get('foo'))
+    ->send()
+;
 
 
 
