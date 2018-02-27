@@ -63,7 +63,7 @@ class Session
         $this->sessionHandler = $sessionHandler;
 
         if (null === ($this->sessionId = $this->request->getCookie(static::SESSION_KEY, null))) {
-            $this->sessionId = version_compare(PHP_VERSION, '7.0.0') ? session_create_id() : md5(uniqid());
+            $this->sessionId = version_compare(PHP_VERSION, '7.0.0') >= 1 ? session_create_id() : md5(uniqid());
 
             $this->request->withCookieParams([
                 static::SESSION_KEY => $this->sessionId,
