@@ -7,8 +7,9 @@
  * @link      http://www.fast-d.cn/
  */
 
-namespace FastD\Session;
+namespace FastD\Session\Adapter;
 
+use FastD\Session\AbstractSessionHandler;
 use Predis\Client;
 
 /**
