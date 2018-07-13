@@ -52,9 +52,9 @@ abstract class AbstractSessionHandler implements SessionHandlerInterface
      */
     public function get($key, $default = null)
     {
-		$value = $this->driver->get($key, $default);
-		$this->set($key, $value, $this->lifecycle);
-		return $value;
+	$value = $this->driver->get($key, $default);
+	$this->set($key, $value, $this->lifecycle);
+	return $value;
     }
 
     /**
