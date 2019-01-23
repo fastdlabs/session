@@ -11,6 +11,7 @@ namespace FastD\Session;
 
 use FastD\Session\Adapter\NativeSessionHandler;
 use FastD\Http\ServerRequest;
+use Psr\SimpleCache\InvalidArgumentException;
 
 /**
  * Class Session
@@ -23,11 +24,6 @@ class Session
      * @var string
      */
     const SESSION_KEY = 'session-id';
-
-    /**
-     * @var static
-     */
-    protected static $session;
 
     /**
      * @var AbstractSessionHandler
@@ -51,6 +47,7 @@ class Session
      */
     public function __construct(ServerRequest $serverRequest = null, SessionHandlerInterface $sessionHandler = null)
     {
+        // FPM create new ServerRequest
         if (null === $serverRequest) {
             $serverRequest = ServerRequest::createServerRequestFromGlobals();
         }
@@ -80,11 +77,7 @@ class Session
      */
     public static function start(ServerRequest $serverRequest = null, AbstractSessionHandler $sessionHandler = null)
     {
-        if (null === static::$session) {
-            static::$session = new static($serverRequest, $sessionHandler);
-        }
-
-        return static::$session;
+        return new static($serverRequest, $sessionHandler);
     }
 
     /**
@@ -97,8 +90,9 @@ class Session
 
     /**
      * @param $name
-     * @param $default
+     * @param null $default
      * @return mixed
+     * @throws InvalidArgumentException
      */
     public function get($name, $default = null)
     {
@@ -110,6 +104,7 @@ class Session
      * @param $value
      * @param null $ttl
      * @return $this
+     * @throws InvalidArgumentException
      */
     public function set($key, $value, $ttl = null)
     {
@@ -121,6 +116,7 @@ class Session
     /**
      * @param $key
      * @return bool
+     * @throws InvalidArgumentException
      */
     public function has($key)
     {
@@ -130,6 +126,7 @@ class Session
     /**
      * @param $key
      * @return $this
+     * @throws InvalidArgumentException
      */
     public function delete($key)
     {

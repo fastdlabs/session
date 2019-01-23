@@ -11,6 +11,7 @@ namespace FastD\Session;
 
 
 use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 
 /**
@@ -33,12 +34,13 @@ abstract class AbstractSessionHandler implements SessionHandlerInterface
     /**
      * @param $sessionId
      * @param CacheInterface|null $cache
+     * @param string $directory
      * @return mixed
      */
-    public function start($sessionId, CacheInterface $cache = null)
+    public function start($sessionId, CacheInterface $cache = null, $directory = '/tm/session')
     {
         if (null === $cache) {
-            $cache = new FilesystemCache($sessionId, $this->lifecycle, '/tmp');
+            $cache = new FilesystemCache($sessionId, $this->lifecycle, $directory);
         }
 
         $this->driver = $cache;
@@ -48,7 +50,7 @@ abstract class AbstractSessionHandler implements SessionHandlerInterface
      * @param $key
      * @param null $default
      * @return mixed
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function get($key, $default = null)
     {
@@ -60,7 +62,7 @@ abstract class AbstractSessionHandler implements SessionHandlerInterface
      * @param $value
      * @param null $ttl
      * @return $this
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function set($key, $value, $ttl = null)
     {
@@ -72,7 +74,7 @@ abstract class AbstractSessionHandler implements SessionHandlerInterface
     /**
      * @param $key
      * @return bool
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function delete($key)
     {
@@ -82,7 +84,7 @@ abstract class AbstractSessionHandler implements SessionHandlerInterface
     /**
      * @param $key
      * @return bool
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function has($key)
     {

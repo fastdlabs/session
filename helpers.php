@@ -1,5 +1,7 @@
 <?php
 
+use FastD\Http\ServerRequest;
+use FastD\Session\AbstractSessionHandler;
 use FastD\Session\Session;
 
 /**
@@ -10,7 +12,13 @@ use FastD\Session\Session;
  * @see      http://www.fast-d.cn/
  */
 
-function session ()
-{
-    return Session::start();
+/**
+ * @param ServerRequest|null $serverRequest
+ * @return Session
+ */
+if (!function_exists('session')) {
+    function session (ServerRequest $serverRequest = null, AbstractSessionHandler $handler = null)
+    {
+        return Session::start($serverRequest, $handler);
+    }
 }
