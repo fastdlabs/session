@@ -19,9 +19,6 @@
     "autoload": {
         "psr-4": {
             "FastD\\Session\\": "src"
-        },
-        "files": [
-            "helpers.php"
-        ]
+        }
     }
 }

@@ -35,9 +35,9 @@ abstract class AbstractSessionHandler implements SessionHandlerInterface
      * @param $sessionId
      * @param CacheInterface|null $cache
      * @param string $directory
-     * @return mixed
+     * @return void
      */
-    public function start($sessionId, CacheInterface $cache = null, $directory = '/tm/session')
+    public function start($sessionId, CacheInterface $cache = null, $directory = '/tmp/session')
     {
         if (null === $cache) {
             $cache = new FilesystemCache($sessionId, $this->lifecycle, $directory);
