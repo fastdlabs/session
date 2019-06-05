@@ -12,7 +12,6 @@ namespace FastD\Session;
 
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
-use Symfony\Component\Cache\Simple\FilesystemCache;
 
 /**
  * Class SessionHandler
@@ -40,7 +39,7 @@ abstract class AbstractSessionHandler implements SessionHandlerInterface
     public function start($sessionId, CacheInterface $cache = null, $directory = '/tmp/session')
     {
         if (null === $cache) {
-            $cache = new FilesystemCache($sessionId, $this->lifecycle, $directory);
+            $cache = new SessionCache($sessionId, $this->lifecycle, $directory);
         }
 
         $this->driver = $cache;
